@@ -5,7 +5,8 @@ import { client } from "@/sanity/client";
 import Navbar from "@/components/Navabr";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import { Metadata } from "next";
+
+type tParams = Promise<{ slug: string[] }>;
 
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
 
@@ -17,14 +18,11 @@ const urlFor = (source: SanityImageSource) =>
 
 const options = { next: { revalidate: 30 } };
 
-export default async function PostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default async function PostPage(props: { params: tParams }) {
+  const { slug } = await props.params;
   const post = await client.fetch<SanityDocument>(
     POST_QUERY,
-    { slug: params.slug },
+    slug,
     options
   );
 
@@ -82,19 +80,19 @@ export default async function PostPage({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const post = await client.fetch<SanityDocument>(
-    POST_QUERY,
-    { slug: params.slug },
-    options
-  );
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: { slug: string };
+// }): Promise<Metadata> {
+//   const post = await client.fetch<SanityDocument>(
+//     POST_QUERY,
+//     { slug: params.slug },
+//     options
+//   );
 
-  return {
-    title: post.title,
-    description: post.excerpt || "",
-  };
-}
+//   return {
+//     title: post.title,
+//     description: post.excerpt || "",
+//   };
+// }
