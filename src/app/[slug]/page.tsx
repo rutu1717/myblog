@@ -22,7 +22,7 @@ export default async function PostPage(props: { params: tParams }) {
   const { slug } = await props.params;
   const post = await client.fetch<SanityDocument>(
     POST_QUERY,
-    slug,
+    {slug},
     options
   );
 
