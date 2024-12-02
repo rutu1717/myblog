@@ -23,8 +23,8 @@ export default async function PostPage({
   params: { slug: string };
 }) {
   const post = await client.fetch<SanityDocument>(
-    POST_QUERY, 
-    { slug: params.slug }, 
+    POST_QUERY,
+    { slug: params.slug },
     options
   );
 
@@ -34,7 +34,7 @@ export default async function PostPage({
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <main className="container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4 bg-gray-900 text-gray-100">
         <Link href="/" className="hover:underline text-teal-400">
           ← Show More Blogs
@@ -58,44 +58,43 @@ export default async function PostPage({
               value={post.body}
               components={{
                 block: {
-                  normal: ({children}) => (
+                  normal: ({ children }) => (
                     <p className="text-gray-100">{children}</p>
-                  )
+                  ),
                 },
                 marks: {
-                  link: ({children, value}) => (
+                  link: ({ children, value }) => (
                     <a
                       href={value.href}
                       className="text-teal-400 hover:text-teal-300"
                     >
                       {children}
                     </a>
-                  )
-                }
+                  ),
+                },
               }}
             />
           )}
         </div>
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 }
 
-// Add metadata generation
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
   const post = await client.fetch<SanityDocument>(
-    POST_QUERY, 
-    { slug: params.slug }, 
+    POST_QUERY,
+    { slug: params.slug },
     options
   );
 
   return {
     title: post.title,
-    description: post.excerpt || '',
+    description: post.excerpt || "",
   };
 }
