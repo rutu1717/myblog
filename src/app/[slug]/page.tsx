@@ -7,7 +7,11 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
-
+interface PageProps {
+  params: {
+    slug: string;
+  }
+}
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>
   projectId && dataset
@@ -18,11 +22,10 @@ const options = { next: { revalidate: 30 } };
 
 export default async function PostPage({
   params,
-}: {
-  params: { slug: string };
-}) {
-  const { slug } = await params;
-  const post = await client.fetch<SanityDocument>(POST_QUERY, {slug}, options);
+}: 
+  PageProps
+) {
+  const post = await client.fetch<SanityDocument>(POST_QUERY, { slug: params.slug }, options);
   
   const postImageUrl = post.image
     ? urlFor(post.image)?.width(550).height(310).url()
