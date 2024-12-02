@@ -1,5 +1,5 @@
 "use client";
-import { Home, User, Mail } from 'lucide-react';
+import { Home, User } from 'lucide-react';
 export default function Navbar() {
   return (
     <nav className="bg-gray-800 shadow-md py-4 px-6">
