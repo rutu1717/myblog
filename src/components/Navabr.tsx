@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 import { Home, User } from 'lucide-react';
 export default function Navbar() {
   return (
@@ -6,14 +7,14 @@ export default function Navbar() {
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold text-teal-400">Mindfulspace</div>
           <div className="flex space-x-8">
-            <a href="/" className="flex items-center text-gray-300 hover:text-teal-400 transition duration-300">
+            <Link href="/" className="flex items-center text-gray-300 hover:text-teal-400 transition duration-300">
               <Home className="mr-2" size={20} />
               Home
-            </a>
-            <a href="/about" className="flex items-center text-gray-300 hover:text-teal-400 transition duration-300">
+            </Link>
+            <Link href="/about" className="flex items-center text-gray-300 hover:text-teal-400 transition duration-300">
               <User className="mr-2" size={20} />
               About
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
