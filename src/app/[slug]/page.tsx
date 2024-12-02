@@ -5,13 +5,10 @@ import { client } from "@/sanity/client";
 import Navbar from "@/components/Navabr";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { Metadata } from "next";
 
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
-interface PageProps {
-  params: {
-    slug: string;
-  }
-}
+
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>
   projectId && dataset
@@ -22,11 +19,15 @@ const options = { next: { revalidate: 30 } };
 
 export default async function PostPage({
   params,
-}: 
-  PageProps
-) {
-  const post = await client.fetch<SanityDocument>(POST_QUERY, { slug: params.slug }, options);
-  
+}: {
+  params: { slug: string };
+}) {
+  const post = await client.fetch<SanityDocument>(
+    POST_QUERY, 
+    { slug: params.slug }, 
+    options
+  );
+
   const postImageUrl = post.image
     ? urlFor(post.image)?.width(550).height(310).url()
     : null;
@@ -53,8 +54,8 @@ export default async function PostPage({
             Published: {new Date(post.publishedAt).toLocaleDateString()}
           </p>
           {Array.isArray(post.body) && (
-            <PortableText 
-              value={post.body} 
+            <PortableText
+              value={post.body}
               components={{
                 block: {
                   normal: ({children}) => (
@@ -63,8 +64,8 @@ export default async function PostPage({
                 },
                 marks: {
                   link: ({children, value}) => (
-                    <a 
-                      href={value.href} 
+                    <a
+                      href={value.href}
                       className="text-teal-400 hover:text-teal-300"
                     >
                       {children}
@@ -79,4 +80,22 @@ export default async function PostPage({
       <Footer/>
     </>
   );
+}
+
+// Add metadata generation
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = await client.fetch<SanityDocument>(
+    POST_QUERY, 
+    { slug: params.slug }, 
+    options
+  );
+
+  return {
+    title: post.title,
+    description: post.excerpt || '',
+  };
 }
