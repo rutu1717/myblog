@@ -1,5 +1,6 @@
 import { PortableText, type SanityDocument } from "next-sanity";
 import imageUrlBuilder from "@sanity/image-url";
+import Head from "next/head";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
 import Navbar from "@/components/Navabr";
@@ -29,9 +30,23 @@ export default async function PostPage(props: { params: tParams }) {
   const postImageUrl = post.image
     ? urlFor(post.image)?.width(550).height(310).url()
     : null;
-
+    // Extracting meta description, tags, and longtail tags
+    const metaDescription = post.metaDescription || post.excerpt || "";
+    const tags = post.tags ? post.tags.join(", ") : "";
+    const longtailTags = post.longTailTags ? post.longTailTags.join(", ") : "";
   return (
     <>
+    <Head>
+        <meta name="description" content={metaDescription} />
+        <meta name="keywords" content={tags} />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={postImageUrl || "/default-image.jpg"} />
+        <meta property="og:url" content={`https://www.mindtechwellness.info/${slug}`} />
+        <meta name="longtail-tags" content={longtailTags} />
+        <title>{post.title}</title>
+      </Head>
       <Navbar />
       <main className="container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4 bg-gray-900 text-gray-100">
         <Link href="/" className="hover:underline text-teal-400">
